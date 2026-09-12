@@ -1,0 +1,24 @@
+name: Publish Android latest
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - android/GreyBridge-Android.apk
+      - .github/workflows/release-android.yml
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish android-latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete android-latest --yes --cleanup-tag || true
+          gh release create android-latest android/GreyBridge-Android.apk --target "$GITHUB_SHA" --title "GreyBridge Android latest" --notes "Latest public Android test build."
