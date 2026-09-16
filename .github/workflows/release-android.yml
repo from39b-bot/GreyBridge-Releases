@@ -8,6 +8,7 @@ on:
     branches: [main]
     paths:
       - android/GreyBridge-Android.apk
+      - android/latest.json
       - .github/workflows/release-android.yml
   workflow_dispatch:
 
@@ -20,5 +21,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          test -s android/latest.json
           gh release delete android-latest --yes --cleanup-tag || true
-          gh release create android-latest android/GreyBridge-Android.apk --target "$GITHUB_SHA" --title "GreyBridge Android latest" --notes "Latest public Android test build."
+          gh release create android-latest android/GreyBridge-Android.apk --target "$GITHUB_SHA" --title "GreyBridge Android latest" --notes-file android/latest.json
